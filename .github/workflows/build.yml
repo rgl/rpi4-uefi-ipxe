@@ -1,0 +1,18 @@
+name: build
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo bash provision-dependencies.sh
+      - name: Build
+        run: bash build-ipxe.sh
+      - name: Archive Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: rpi4-uefi-ipxe-artifacts
+          path: rpi4-uefi-ipxe.zip
