@@ -63,21 +63,40 @@ popd
 
 # package it.
 RPI4_UEFI_PATH="$PWD/RPi4_UEFI_Firmware_$RPI4_UEFI_VERSION"
-RPI4_UEFI_IPXE_PATH="$PWD/rpi4-uefi-ipxe.zip"
+RPI4_UEFI_IPXE_ZIP_PATH="$PWD/rpi4-uefi-ipxe.zip"
+RPI4_UEFI_IPXE_IMG_PATH="$PWD/rpi4-uefi-ipxe.img"
+RPI4_UEFI_IPXE_IMG_ZIP_PATH="$PWD/rpi4-uefi-ipxe.img.zip"
+# package it as a zip file.
 [ -f "$RPI4_UEFI_PATH.zip" ] || wget -q "https://github.com/pftf/RPi4/releases/download/$RPI4_UEFI_VERSION/$(basename "$RPI4_UEFI_PATH").zip"
 [ -d "$RPI4_UEFI_PATH" ] || unzip -d "$RPI4_UEFI_PATH" "$RPI4_UEFI_PATH.zip"
 install -d "$RPI4_UEFI_PATH/efi/boot"
 install "$IPXE_PATH/src/bin-arm64-efi/ipxe.efi" "$RPI4_UEFI_PATH/efi/boot/bootaa64.efi"
 pushd "$RPI4_UEFI_PATH"
-rm -f "$RPI4_UEFI_IPXE_PATH"
-zip -9 --no-dir-entries -r "$RPI4_UEFI_IPXE_PATH" .
-unzip -l "$RPI4_UEFI_IPXE_PATH"
-sha256sum "$RPI4_UEFI_IPXE_PATH"
+rm -f "$RPI4_UEFI_IPXE_ZIP_PATH"
+zip -9 --no-dir-entries -r "$RPI4_UEFI_IPXE_ZIP_PATH" .
+unzip -l "$RPI4_UEFI_IPXE_ZIP_PATH"
 popd
+# package it as a image zip file.
+rm -f "$RPI4_UEFI_IPXE_IMG_PATH" "$RPI4_UEFI_IPXE_IMG_ZIP_PATH"
+truncate --size $((100*1024*1024)) "$RPI4_UEFI_IPXE_IMG_PATH"
+target_device="$(losetup --partscan --show --find "$RPI4_UEFI_IPXE_IMG_PATH")"
+parted --script "$target_device" mklabel msdos
+parted --script "$target_device" mkpart primary fat32 4 100%
+mkfs -t vfat -n RPI4-IPXE "${target_device}p1" # NB vfat label is truncated to 11 chars.
+target_path="$RPI4_UEFI_IPXE_IMG_PATH-boot"
+mkdir -p "$target_path"
+mount "${target_device}p1" "$target_path"
+unzip "$RPI4_UEFI_IPXE_ZIP_PATH" -d "$target_path"
+umount "$target_path"
+rmdir "$target_path"
+losetup --detach "$target_device"
+zip -9 "$RPI4_UEFI_IPXE_IMG_ZIP_PATH" "$RPI4_UEFI_IPXE_IMG_PATH"
+rm "$RPI4_UEFI_IPXE_IMG_PATH"
+sha256sum rpi4-uefi-ipxe*.zip >sha256sum.txt
 
 # copy to the host when running from vagrant.
 if [ -d /vagrant ]; then
     mkdir -p /vagrant/tmp
     cp -f "$IPXE_PATH/src/bin-arm64-efi/ipxe.efi" /vagrant/tmp
-    cp -f "$RPI4_UEFI_IPXE_PATH" /vagrant/tmp
+    cp -f rpi4-uefi-ipxe*.zip sha256sum.txt /vagrant/tmp
 fi

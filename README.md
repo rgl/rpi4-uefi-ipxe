@@ -8,6 +8,10 @@ This is used by [rgl/talos-vagrant](https://github.com/rgl/talos-vagrant) and is
 
 ## sd-card flashing
 
+Use [Raspberry Pi Imager](https://github.com/raspberrypi/rpi-imager) or [Etcher](https://github.com/balena-io/etcher) to flash [a release `rpi4-uefi-ipxe.img.zip`](https://github.com/rgl/rpi4-uefi-ipxe/releases) file into the sd-card.
+
+Alternatively, use the `rpi4-uefi-ipxe.zip` file to manually create the sd-card.
+
 Find which device was allocated for the sd-card that will store the uefi firmware:
 
 ```bash
@@ -56,8 +60,6 @@ mkfs -t vfat -n RPI4-UEFI ${target_device}1
 # install the firmware in the sd-card.
 mkdir -p $target
 mount ${target_device}1 $target
-# get the rpi4 uefi ipxe firmware.
-wget https://github.com/rgl/rpi4-uefi-ipxe/releases/download/v0.1.0/rpi4-uefi-ipxe.zip
 unzip rpi4-uefi-ipxe.zip -d $target
 
 # check the results.
