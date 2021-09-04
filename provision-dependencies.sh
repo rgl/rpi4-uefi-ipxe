@@ -2,7 +2,7 @@
 set -euxo pipefail
 
 # install the dependencies.
-# see https://github.com/pftf/RPi4/blob/v1.29/.github/workflows/linux_edk2.yml
+# see https://github.com/pftf/RPi4/blob/v1.30/.github/workflows/linux_edk2.yml
 apt-get install -y \
     acpica-tools gcc-aarch64-linux-gnu python3-distutils uuid-dev \
     build-essential dos2unix unzip zip
