@@ -2,9 +2,9 @@ name: build
 on: [push]
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Install Dependencies
         run: |
           sudo apt-get update
@@ -12,7 +12,7 @@ jobs:
       - name: Build
         run: sudo bash build-ipxe.sh
       - name: Archive Artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: rpi4-uefi-ipxe-artifacts
           path: |
