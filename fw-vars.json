@@ -1,0 +1,11 @@
+{
+    "version": 2,
+    "variables": [
+        {
+            "name": "RamLimitTo3GB",
+            "guid": "cd7cc258-31db-22e6-9f22-63b0b8eed6b5",
+            "attr": 7,
+            "data": "00000000"
+        }
+    ]
+}

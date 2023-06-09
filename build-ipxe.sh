@@ -75,6 +75,15 @@ RPI4_UEFI_IPXE_IMG_ZIP_PATH="$PWD/rpi4-uefi-ipxe.img.zip"
 pushd "$RPI4_UEFI_PATH"
 install -d efi/boot
 install "$IPXE_PATH/src/bin-arm64-efi/ipxe.efi" efi/boot/bootaa64.efi
+if [ -d /vagrant ]; then
+    virt-fw-vars \
+        --input RPI_EFI.fd \
+        --output RPI_EFI.fd \
+        --set-json /vagrant/fw-vars.json
+    virt-fw-vars \
+        --input RPI_EFI.fd \
+        --print
+fi
 rm -f "$RPI4_UEFI_IPXE_ZIP_PATH"
 zip -9 --no-dir-entries -r "$RPI4_UEFI_IPXE_ZIP_PATH" .
 unzip -l "$RPI4_UEFI_IPXE_ZIP_PATH"
