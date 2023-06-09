@@ -72,9 +72,9 @@ RPI4_UEFI_IPXE_IMG_ZIP_PATH="$PWD/rpi4-uefi-ipxe.img.zip"
 # package it as a zip file.
 [ -f "$RPI4_UEFI_PATH.zip" ] || wget -q "https://github.com/pftf/RPi4/releases/download/$RPI4_UEFI_VERSION/$(basename "$RPI4_UEFI_PATH").zip"
 [ -d "$RPI4_UEFI_PATH" ] || unzip -d "$RPI4_UEFI_PATH" "$RPI4_UEFI_PATH.zip"
-install -d "$RPI4_UEFI_PATH/efi/boot"
-install "$IPXE_PATH/src/bin-arm64-efi/ipxe.efi" "$RPI4_UEFI_PATH/efi/boot/bootaa64.efi"
 pushd "$RPI4_UEFI_PATH"
+install -d efi/boot
+install "$IPXE_PATH/src/bin-arm64-efi/ipxe.efi" efi/boot/bootaa64.efi
 rm -f "$RPI4_UEFI_IPXE_ZIP_PATH"
 zip -9 --no-dir-entries -r "$RPI4_UEFI_IPXE_ZIP_PATH" .
 unzip -l "$RPI4_UEFI_IPXE_ZIP_PATH"
