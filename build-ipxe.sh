@@ -2,7 +2,7 @@
 set -euxo pipefail
 
 # see https://github.com/ipxe/ipxe/releases
-IPXE_VERSION='7147532c3fbf9a7061e74549f6f920a91ca9a80d' # 2022-12-22T15:12:34Z
+IPXE_VERSION='25a3d3acabeec97c4a4cb8ed8fb90853e8a195c3' # 2023-06-08T11:24:07Z
 
 # see https://github.com/pftf/RPi4/releases
 RPI4_UEFI_VERSION='v1.35'
