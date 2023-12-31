@@ -102,7 +102,12 @@ unzip "$RPI4_UEFI_IPXE_ZIP_PATH" -d "$target_path"
 umount "$target_path"
 rmdir "$target_path"
 losetup --detach "$target_device"
-zip -9 "$RPI4_UEFI_IPXE_IMG_ZIP_PATH" "$RPI4_UEFI_IPXE_IMG_PATH"
+pushd "$(dirname "$RPI4_UEFI_IPXE_IMG_PATH")"
+zip -9 --no-dir-entries \
+    "$RPI4_UEFI_IPXE_IMG_ZIP_PATH" \
+    "$(basename "$RPI4_UEFI_IPXE_IMG_PATH")"
+unzip -l "$RPI4_UEFI_IPXE_IMG_ZIP_PATH"
+popd
 rm "$RPI4_UEFI_IPXE_IMG_PATH"
 sha256sum rpi4-uefi-ipxe*.zip >sha256sum.txt
 
