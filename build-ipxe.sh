@@ -1,8 +1,8 @@
 #!/bin/bash
 set -euxo pipefail
 
-# see https://github.com/ipxe/ipxe/releases
-IPXE_VERSION='25a3d3acabeec97c4a4cb8ed8fb90853e8a195c3' # 2023-06-08T11:24:07Z
+# see https://github.com/ipxe/ipxe
+IPXE_VERSION='df2f23e333601e587f72c68cb7b7b116796f9d3c' # 2024-03-13T14:48:44Z
 
 # see https://github.com/pftf/RPi4/releases
 RPI4_UEFI_VERSION='v1.35'
