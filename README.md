@@ -4,6 +4,10 @@
 
 This builds UEFI iPXE for the Raspberry Pi 4 ARM64 and releases it with the [pftf/RPi4 binaries](https://github.com/pftf/RPi4).
 
+You can [flash it to a an sd-card](#sd-card-flashing).
+
+Then, you can [try using iPXE](#ipxe-usage).
+
 This is used by [rgl/talos-vagrant](https://github.com/rgl/talos-vagrant) and is related to [rgl/raspberrypi-uefi-edk2-vagrant](https://github.com/rgl/raspberrypi-uefi-edk2-vagrant).
 
 ## sd-card flashing
@@ -76,6 +80,74 @@ exit
 Remove the sd-card from the computer.
 
 Put it in the rpi and power it up.
+
+## iPXE Usage
+
+When you see the UEFI firmware logo, press ESC to enter the Setup.
+
+Select `Boot Manager`.
+
+Select `SD/MMC on Arasan SDHCI`.
+
+Press `Ctrl+B` to enter the iPXE command line.
+
+Configure the network and the time:
+
+```bash
+dhcp
+ntp pool.ntp.org
+```
+
+See the configuration:
+
+```bash
+config # press Ctrl+X to exit.
+```
+
+Try to download a file using HTTP and HTTPS:
+
+```bash
+# see https://ipxe.org/crypto
+# see https://ipxe.org/cfg/crosscert
+imgfetch http://boot.ipxe.org/1mb
+imgfetch https://boot.ipxe.org/1mb
+imgstat
+imgfree 1mb # free one of the named fetched images.
+imgfree     # free all.
+```
+
+Boot into the Debian Installer (https://www.debian.org/distrib/netinst):
+
+**NB** Also see https://github.com/rgl/raspberrypi-uefi-edk2-vagrant/blob/master/rpi.ipxe.
+
+```bash
+dhcp
+ntp pool.ntp.org
+set b https://deb.debian.org/debian/dists/bookworm/main/installer-arm64/current/images/netboot/debian-installer/arm64
+initrd ${b}/initrd.gz
+kernel ${b}/linux
+boot
+```
+
+Once Debian loads, press `Ctrl+Alt+F2`, type `free -m` to see the total memory. In my RPi4 with 8 GiB of RAM, this was the output:
+
+```console
+BusyBox v1.35.0 (Debian 1:1.35.0-4+b3) built-in shell (ash)
+Enter 'help' for a list of built-in commands.
+
+# free -m
+          total      used      free     shared  buff/cache  available
+Mem:    7984044     82956   7758700     129312      142388    7620596
+Swap:         0         0         0
+```
+
+You can also try to boot into https://netboot.xyz:
+
+**NB** Here, although the netboot.xyz menu loaded correctly, it failed to boot an actual OS.
+
+```bash
+chain --autofree https://boot.netboot.xyz
+```
 
 For more information see:
 
