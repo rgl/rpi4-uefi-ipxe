@@ -92,9 +92,18 @@ popd
 rm -f "$RPI4_UEFI_IPXE_IMG_PATH" "$RPI4_UEFI_IPXE_IMG_ZIP_PATH"
 truncate --size $((100*1024*1024)) "$RPI4_UEFI_IPXE_IMG_PATH"
 target_device="$(losetup --partscan --show --find "$RPI4_UEFI_IPXE_IMG_PATH")"
-parted --script "$target_device" mklabel msdos
-parted --script "$target_device" mkpart primary fat32 4 100%
-mkfs -t vfat -n RPI4-IPXE "${target_device}p1" # NB vfat label is truncated to 11 chars.
+partition_type='gpt' # gpt or mbr.
+if [ "$partition_type" == 'gpt' ]; then
+    parted --script "$target_device" mklabel gpt
+    parted --script "$target_device" mkpart ESP fat32 4MiB 100%
+    parted --script "$target_device" set 1 esp on
+else
+    parted --script "$target_device" mklabel msdos
+    parted --script "$target_device" mkpart primary fat32 4MiB 100%
+fi
+mkfs -t vfat -F 32 -n RPI4-IPXE "${target_device}p1" # NB vfat label is truncated to 11 chars.
+parted --script "$target_device" unit MiB print
+sfdisk -l "$target_device"
 target_path="$RPI4_UEFI_IPXE_IMG_PATH-boot"
 mkdir -p "$target_path"
 mount "${target_device}p1" "$target_path"

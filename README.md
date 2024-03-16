@@ -16,7 +16,7 @@ Use [Raspberry Pi Imager](https://github.com/raspberrypi/rpi-imager) or [Etcher]
 
 Alternatively, use the `rpi4-uefi-ipxe.zip` file to manually create the sd-card.
 
-Find which device was allocated for the sd-card that will store the uefi firmware:
+Find which device was allocated for the sd-card that will store the UEFI firmware:
 
 ```bash
 lsblk -o KNAME,SIZE,TRAN,FSTYPE,UUID,LABEL,MODEL,SERIAL
@@ -28,13 +28,6 @@ lsblk -o KNAME,SIZE,TRAN,FSTYPE,UUID,LABEL,MODEL,SERIAL
 ```
 
 Wipe the sd-card (in this example its at `/dev/sde`) and put a release in it:
-
-**NB** the rpi4 `recovery.bin` (which will end up inside the eeprom) bootloader only
-supports booting from an MBR/MSDOS partition type/table/label and from a
-FAT32 LBA (0x0c) or FAT16 LBA (0x0e) partition types/filesystem. Eventually
-[it will support GPT](https://github.com/raspberrypi/rpi-eeprom/issues/126).
-
-**NB** the rpi4 bootloader that is inside the [mask rom](https://en.wikipedia.org/wiki/Mask_ROM) also [seems to support GPT](https://github.com/raspberrypi/rpi-eeprom/issues/126#issuecomment-628719223), but until its supported by `recovery.bin` we cannot use a GPT.
 
 ```bash
 # switch to root.
@@ -48,18 +41,32 @@ target=/mnt/rpi4-uefi
 umount ${target_device}?
 
 # format the sd-card at $target_device.
-parted --script $target_device mklabel msdos
-parted --script $target_device mkpart primary fat32 4 100
-parted $target_device print
+parted --script $target_device mklabel gpt
+parted --script $target_device mkpart ESP fat32 4MiB 100MB
+parted --script $target_device set 1 esp on
+mkfs -t vfat -F 32 -n RPI4-UEFI ${target_device}1
+
+# show the details.
+parted --script $target_device unit MiB print
 # Model: Generic STORAGE DEVICE (scsi)
-# Disk /dev/sde: 31,0GB
+# Disk /dev/sde: 15268MiB
 # Sector size (logical/physical): 512B/512B
-# Partition Table: msdos
+# Partition Table: gpt
 # Disk Flags:
 #
-# Number  Start   End     Size    Type     File system  Flags
-#  1      4194kB  2048MB  2044MB  primary  fat32        lba
-mkfs -t vfat -n RPI4-UEFI ${target_device}1
+# Number  Start    End      Size     File system  Name  Flags
+#  1      4,00MiB  95,0MiB  91,0MiB  fat32        ESP   boot, esp
+sfdisk -l $target_device
+# Disk /dev/sde: 14,91 GiB, 16009658368 bytes, 31268864 sectors
+# Disk model: STORAGE DEVICE
+# Units: sectors of 1 * 512 = 512 bytes
+# Sector size (logical/physical): 512 bytes / 512 bytes
+# I/O size (minimum/optimal): 512 bytes / 512 bytes
+# Disklabel type: gpt
+# Disk identifier: 1B1E7509-88AF-4F42-9106-4CD120FD37C9
+#
+# Device     Start    End Sectors Size Type
+# /dev/sde1   8192 194559  186368  91M EFI System
 
 # install the firmware in the sd-card.
 mkdir -p $target
