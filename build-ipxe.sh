@@ -69,21 +69,24 @@ RPI4_UEFI_PATH="$PWD/RPi4_UEFI_Firmware_$RPI4_UEFI_VERSION"
 RPI4_UEFI_IPXE_ZIP_PATH="$PWD/rpi4-uefi-ipxe.zip"
 RPI4_UEFI_IPXE_IMG_PATH="$PWD/rpi4-uefi-ipxe.img"
 RPI4_UEFI_IPXE_IMG_ZIP_PATH="$PWD/rpi4-uefi-ipxe.img.zip"
+if [ -f fw-vars.json ]; then
+    FW_VARS_PATH="$PWD/fw-vars.json"
+else
+    FW_VARS_PATH='/vagrant/fw-vars.json'
+fi
 # package it as a zip file.
 [ -f "$RPI4_UEFI_PATH.zip" ] || wget -q "https://github.com/pftf/RPi4/releases/download/$RPI4_UEFI_VERSION/$(basename "$RPI4_UEFI_PATH").zip"
 [ -d "$RPI4_UEFI_PATH" ] || unzip -d "$RPI4_UEFI_PATH" "$RPI4_UEFI_PATH.zip"
 pushd "$RPI4_UEFI_PATH"
 install -d efi/boot
 install "$IPXE_PATH/src/bin-arm64-efi/ipxe.efi" efi/boot/bootaa64.efi
-if [ -d /vagrant ]; then
-    virt-fw-vars \
-        --input RPI_EFI.fd \
-        --output RPI_EFI.fd \
-        --set-json /vagrant/fw-vars.json
-    virt-fw-vars \
-        --input RPI_EFI.fd \
-        --print
-fi
+virt-fw-vars \
+    --input RPI_EFI.fd \
+    --output RPI_EFI.fd \
+    --set-json "$FW_VARS_PATH"
+virt-fw-vars \
+    --input RPI_EFI.fd \
+    --print
 rm -f "$RPI4_UEFI_IPXE_ZIP_PATH"
 zip -9 --no-dir-entries -r "$RPI4_UEFI_IPXE_ZIP_PATH" .
 unzip -l "$RPI4_UEFI_IPXE_ZIP_PATH"
