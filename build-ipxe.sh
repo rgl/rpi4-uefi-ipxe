@@ -5,7 +5,7 @@ set -euxo pipefail
 IPXE_VERSION='301644ab480ab9787c617e1a94e19ca5c2774072' # 2024-08-29T22:36:00Z
 
 # see https://github.com/pftf/RPi4/releases
-RPI4_UEFI_VERSION='v1.36'
+RPI4_UEFI_VERSION='v1.38'
 
 # clone the ipxe repo.
 IPXE_PATH="$PWD/ipxe"

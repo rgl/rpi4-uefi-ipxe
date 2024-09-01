@@ -8,7 +8,7 @@ VIRT_FIRMWARE_PIP_INSTALL_SPEC='virt-firmware==24.7'
 #VIRT_FIRMWARE_PIP_INSTALL_SPEC='git+https://gitlab.com/kraxel/virt-firmware.git@7ce1531dbde6d3949cf0f388b652ed2f8e3c9371' # 2024-07-11T15:17:56Z
 
 # install the dependencies.
-# see https://github.com/pftf/RPi4/blob/v1.36/.github/workflows/linux_edk2.yml
+# see https://github.com/pftf/RPi4/blob/v1.38/.github/workflows/linux_edk2.yml
 apt-get install -y \
     acpica-tools gcc-aarch64-linux-gnu python3-distutils uuid-dev \
     build-essential dos2unix unzip zip
