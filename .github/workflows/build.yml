@@ -2,15 +2,16 @@ name: build
 on: [push]
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - name: Install Dependencies
         run: |
           sudo apt-get update
           sudo bash provision-dependencies.sh
+          echo /opt/venv/bin >>"$GITHUB_PATH"
       - name: Build
-        run: sudo bash build-ipxe.sh
+        run: sudo --preserve-env=PATH bash build-ipxe.sh
       - name: Archive Artifacts
         uses: actions/upload-artifact@v4
         with:
