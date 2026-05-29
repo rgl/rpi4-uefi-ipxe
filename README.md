@@ -12,7 +12,7 @@ This is used by [rgl/talos-vagrant](https://github.com/rgl/talos-vagrant) and is
 
 ## sd-card flashing
 
-Use [Raspberry Pi Imager](https://github.com/raspberrypi/rpi-imager) or [Etcher](https://github.com/balena-io/etcher) to flash [a release `rpi4-uefi-ipxe.img.zip`](https://github.com/rgl/rpi4-uefi-ipxe/releases) file into the sd-card.
+Use [USBImager](https://gitlab.com/bztsrc/usbimager), [Raspberry Pi Imager](https://github.com/raspberrypi/rpi-imager), or [Etcher](https://github.com/balena-io/etcher) to flash [a release `rpi4-uefi-ipxe.img.zip`](https://github.com/rgl/rpi4-uefi-ipxe/releases) file into the sd-card.
 
 Alternatively, use the `rpi4-uefi-ipxe.zip` file to manually create the sd-card.
 
