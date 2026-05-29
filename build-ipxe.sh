@@ -5,6 +5,7 @@ set -euxo pipefail
 IPXE_VERSION='409747f42cf8bb192ac9b69251654733f19420f5' # 2026-05-28T11:25:38.000Z
 
 # see https://github.com/pftf/RPi4/releases
+# NB we cannot upgrade until https://github.com/pftf/RPi4/issues/283 is fixed.
 RPI4_UEFI_VERSION='v1.50'
 
 # clone the ipxe repo.
