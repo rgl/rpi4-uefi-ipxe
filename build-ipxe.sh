@@ -2,7 +2,7 @@
 set -euxo pipefail
 
 # see https://github.com/ipxe/ipxe
-IPXE_VERSION='0abef79a29e59b0d328b0db9fb16531f7d6653f6' # 2026-01-21T23:26:23Z
+IPXE_VERSION='409747f42cf8bb192ac9b69251654733f19420f5' # 2026-05-28T11:25:38.000Z
 
 # see https://github.com/pftf/RPi4/releases
 RPI4_UEFI_VERSION='v1.50'
@@ -61,7 +61,16 @@ NUM_CPUS=$((`getconf _NPROCESSORS_ONLN` + 2))
 #    src/config/local/*.h they will not always work unless we
 #    build from scratch.
 rm -rf src/bin*
-time make -j $NUM_CPUS -C src bin-arm64-efi/ipxe.efi
+# NB if you are having trouble running iPXE you can make a DEBUG build with,
+#    e.g.:
+#       make ... DEBUG=init,usb,usbkbd,xhci
+#    see iPXE initialising devices... loop at
+#        https://lists.ipxe.org/pipermail/ipxe-devel/2021-June/007464.html
+time make -j $NUM_CPUS -C src \
+    bin-arm64-efi/ipxe-legacy.efi
+# NB since ipxe 2.0.0, to work in my machines, I have to use ipxe-legacy.efi.
+#    see https://github.com/ipxe/ipxe/issues/1643
+mv src/bin-arm64-efi/ipxe{-legacy,}.efi
 popd
 
 # package it.
