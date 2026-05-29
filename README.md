@@ -130,7 +130,7 @@ Boot into the Debian Installer (https://www.debian.org/distrib/netinst):
 ```bash
 dhcp
 ntp pool.ntp.org
-set b https://deb.debian.org/debian/dists/bookworm/main/installer-arm64/current/images/netboot/debian-installer/arm64
+set b https://deb.debian.org/debian/dists/trixie/main/installer-arm64/current/images/netboot/debian-installer/arm64
 initrd ${b}/initrd.gz
 kernel ${b}/linux
 boot
@@ -139,12 +139,12 @@ boot
 Once Debian loads, press `Ctrl+Alt+F2`, type `free -m` to see the total memory. In my RPi4 with 8 GiB of RAM, this was the output:
 
 ```console
-BusyBox v1.35.0 (Debian 1:1.35.0-4+b3) built-in shell (ash)
+BusyBox v1.37.0 (Debian 1:1.37.0-6+b8) built-in shell (ash)
 Enter 'help' for a list of built-in commands.
 
 # free -m
           total      used      free     shared  buff/cache  available
-Mem:    7984044     82956   7758700     129312      142388    7620596
+Mem:    7971304     88700   7802592      74012       80012    7660844
 Swap:         0         0         0
 ```
 
