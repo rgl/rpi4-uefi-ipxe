@@ -4,7 +4,7 @@ set -euxo pipefail
 # virt-firmware.
 # see https://pypi.org/project/virt-firmware
 # see https://gitlab.com/kraxel/virt-firmware
-VIRT_FIRMWARE_PIP_INSTALL_SPEC='virt-firmware==25.12'
+VIRT_FIRMWARE_PIP_INSTALL_SPEC='virt-firmware==26.5.4'
 #VIRT_FIRMWARE_PIP_INSTALL_SPEC='git+https://gitlab.com/kraxel/virt-firmware.git@dc4d64c793823a4edee80c55726744ec48243211' # 2025-12-08T11:19:42Z
 
 # install the dependencies.
