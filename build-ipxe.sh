@@ -2,7 +2,7 @@
 set -euxo pipefail
 
 # see https://github.com/ipxe/ipxe
-IPXE_VERSION='409747f42cf8bb192ac9b69251654733f19420f5' # 2026-05-28T11:25:38.000Z
+IPXE_VERSION='5fe9965198e72166485246102d06425e333d9839' # 2026-08-31T20:23:35.000Z
 
 # see https://github.com/pftf/RPi4/releases
 # NB we cannot upgrade until https://github.com/pftf/RPi4/issues/283 is fixed.
